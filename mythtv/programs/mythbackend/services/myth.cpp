@@ -366,7 +366,85 @@ bool Myth::RemoveStorageGroupDir( const QString &sGroupName,
     query.bindValue(":HOSTNAME" , sHostName  );
     if (!query.exec())
     {
-        MythDB::DBError("MythAPI::AddStorageGroupDir()", query);
+        MythDB::DBError("MythAPI::RemoveStorageGroupDir()", query);
+
+        throw( QString( "Database Error executing query." ));
+    }
+
+    return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+/////////////////////////////////////////////////////////////////////////////
+
+bool Myth::AddRecordingGroup( const QString &RecGroupName )
+{
+    MSqlQuery query(MSqlQuery::InitCon());
+
+    if (!query.isConnected())
+        throw( QString("Database not open while trying to add Recording "
+                        "Group "));
+
+    if (RecGroupName.isEmpty())
+        throw ( QString( "Recording Group Required" ));
+
+    query.prepare("SELECT COUNT(*) "
+                  "FROM recgroups "
+                  "WHERE recgroup = :GROUPNAME;");
+    query.bindValue(":GROUPNAME", RecGroupName );
+    if (!query.exec())
+    {
+        MythDB::DBError("MythAPI::AddRecordingGroup()", query);
+
+        throw( QString( "Database Error executing query." ));
+    }
+
+    if (query.next())
+    {
+        if (query.value(0).toInt() > 0)
+            return false;
+    }
+
+    query.prepare("INSERT recgroups "
+                  "( recgroup, displayname ) "
+                  "VALUES "
+                  "( :GROUPNAME, :DISPLAYNAME );");
+    query.bindValue(":GROUPNAME", RecGroupName );
+    query.bindValue(":DISPLAYNAME", RecGroupName );
+
+    if (!query.exec())
+    {
+        MythDB::DBError("MythAPI::AddRecordingGroup()", query);
+
+        throw( QString( "Database Error executing query." ));
+    }
+
+    return true;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//
+/////////////////////////////////////////////////////////////////////////////
+
+bool Myth::RemoveRecordingGroup( const QString &RecGroupName )
+{
+    MSqlQuery query(MSqlQuery::InitCon());
+
+    if (!query.isConnected())
+        throw( QString("Database not open while trying to remove Recording "
+                       "Group"));
+
+    if (RecGroupName.isEmpty())
+        throw ( QString( "Storage Group Required" ));
+
+    query.prepare("DELETE "
+                  "FROM recgroups "
+                  "WHERE recgroup = :GROUPNAME;");
+    query.bindValue(":GROUPNAME", RecGroupName );
+    if (!query.exec())
+    {
+        MythDB::DBError("MythAPI::RemoveRecordingGroup()", query);
 
         throw( QString( "Database Error executing query." ));
     }

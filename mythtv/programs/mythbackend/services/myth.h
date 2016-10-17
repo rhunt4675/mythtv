@@ -58,6 +58,10 @@ class Myth : public MythServices
                                                    const QString   &DirName,
                                                    const QString   &HostName );
 
+        bool                AddRecordingGroup   ( const QString   &GroupName );
+
+        bool                RemoveRecordingGroup( const QString   &GroupName );
+
         DTC::TimeZoneInfo*  GetTimeZone         ( );
 
         QString             GetFormatDate       ( const QDateTime Date,
@@ -226,6 +230,20 @@ class ScriptableMyth : public QObject
         {
             SCRIPT_CATCH_EXCEPTION( false,
                 return m_obj.RemoveStorageGroupDir( GroupName, DirName, HostName );
+            )
+        }
+
+        bool AddRecordingGroup ( const QString  &GroupName)
+        {
+            SCRIPT_CATCH_EXCEPTION( false,
+                return m_obj.AddRecordingGroup( GroupName );
+            )
+        }
+
+        bool RemoveRecordingGroup ( const QString   &GroupName)
+        {
+            SCRIPT_CATCH_EXCEPTION( false,
+                return m_obj.RemoveRecordingGroup( GroupName );
             )
         }
 

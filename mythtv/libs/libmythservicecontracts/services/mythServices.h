@@ -47,6 +47,8 @@ class SERVICE_PUBLIC MythServices : public Service  //, public QScriptable ???
     Q_CLASSINFO( "version"    , "5.0" );
     Q_CLASSINFO( "AddStorageGroupDir_Method",    "POST" )
     Q_CLASSINFO( "RemoveStorageGroupDir_Method", "POST" )
+    Q_CLASSINFO( "AddRecordingGroup_Method",     "POST" )
+    Q_CLASSINFO( "RemoveRecordingGroup_Method",  "POST" )
     Q_CLASSINFO( "PutSetting_Method",            "POST" )
     Q_CLASSINFO( "ChangePassword_Method",        "POST" )
     Q_CLASSINFO( "TestDBSettings_Method",        "POST" )
@@ -92,6 +94,9 @@ class SERVICE_PUBLIC MythServices : public Service  //, public QScriptable ???
         virtual bool                RemoveStorageGroupDir( const QString   &GroupName,
                                                            const QString   &DirName,
                                                            const QString   &HostName ) = 0;
+
+        virtual bool                AddRecordingGroup   ( const QString   &GroupName ) = 0;
+        virtual bool                RemoveRecordingGroup( const QString   &GroupName ) = 0;
 
         virtual DTC::TimeZoneInfo*  GetTimeZone         ( ) = 0;
 
